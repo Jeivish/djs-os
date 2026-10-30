@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJsOS</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div id="bootScreen">
+    <div class="boot-content">
+      <div class="boot-logo">DJ</div>
+      <h1 class="boot-title">DJsOS</h1>
+      <p class="boot-subtitle">version 1.0.0</p>
+      <div class="boot-loader">
+        <div class="boot-bar"></div>
+      </div>
+      <p class="boot-status">Loading system...</p>
+    </div>
+  </div>
+
+  <div id="welcomeScreen" style="display: none;">
+    <div class="welcome-content">
+      <h1>Welcome to <span class="accent">DJsOS</span></h1>
+      <p class="welcome-desc">A web-based operating system built from scratch.</p>
+      <div class="welcome-info">
+        <p>made by <strong>DJ</strong> — poems, code, and questionable music taste</p>
+        <p>powered by curiosity and too much free time</p>
+      </div>
+      <div class="welcome-links">
+        <a href="https://github.com/Jeivish" target="_blank">GitHub</a>
+      </div>
+      <button id="enterDesktop" class="enter-btn">Enter Desktop</button>
+    </div>
+  </div>
+
+  <div id="desktop" style="display: none;">
+    <div id="topBar">
+      <div class="topbar-left">
+        <p id="osName" style="cursor: pointer;">DJsOS</p>
+      </div>
+      <div class="topbar-right">
+        <p id="timeDisplay"></p>
+      </div>
+    </div>
+
+    <div id="desktopApps">
+      <div class="app-icon" id="notesIcon">
+        <div class="icon-img">&#128221;</div>
+        <p>Notes</p>
+      </div>
+      <div class="app-icon" id="terminalIcon">
+        <div class="icon-img">&#128187;</div>
+        <p>Terminal</p>
+      </div>
+      <div class="app-icon" id="musicIcon">
+        <div class="icon-img">&#127925;</div>
+        <p>Music</p>
+      </div>
+      <div class="app-icon" id="aboutIcon">
+        <div class="icon-img">&#128100;</div>
+        <p>About</p>
+      </div>
+    </div>
+
+    <div class="window" id="welcome" style="top: calc(50% - 120px); left: calc(50% - 200px); display: none;">
+      <div class="windowheader" id="welcomeheader">
+        <div class="closebutton" id="welcomeclose"></div>
+        <p class="headertext">Welcome</p>
+        <div class="header-spacer"></div>
+      </div>
+      <div class="window-body welcome-window-body">
+        <h2>Welcome to DJsOS</h2>
+        <p>This is your personal web-based operating system. Explore the apps on your desktop to learn more.</p>
+        <p>Drag windows around, close them, open new ones from the desktop icons.</p>
+        <p style="margin-top: 16px; opacity: 0.6; font-size: 13px;">Built with HTML, CSS, and JavaScript.</p>
+      </div>
+    </div>
+
+    <div class="window" id="notes" style="top: calc(50% - 200px); left: calc(50% - 260px); display: none;">
+      <div class="windowheader" id="notesheader">
+        <div class="closebutton" id="notesclose"></div>
+        <p class="headertext">Notes</p>
+        <div class="header-spacer"></div>
+      </div>
+      <div class="window-body notes-body">
+        <div class="notes-sidebar" id="notesSidebar"></div>
+        <div class="notes-content" id="notesContent">
+          <p class="notes-placeholder">Select a note from the sidebar</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="window" id="terminal" style="top: calc(50% - 180px); left: calc(50% - 220px); display: none;">
+      <div class="windowheader" id="terminalheader">
+        <div class="closebutton" id="terminalclose"></div>
+        <p class="headertext">Terminal</p>
+        <div class="header-spacer"></div>
+      </div>
+      <div class="window-body terminal-body">
+        <div class="terminal-output" id="terminalOutput">
+          <p class="terminal-line">DJsOS Terminal v1.0.0</p>
+          <p class="terminal-line">Type 'help' for available commands.</p>
+          <p class="terminal-line">&nbsp;</p>
+        </div>
+        <div class="terminal-input-row">
+          <span class="terminal-prompt">dj@os:~$</span>
+          <input type="text" id="terminalInput" class="terminal-input" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+    </div>
+
+    <div class="window" id="music" style="top: calc(50% - 150px); left: calc(50% - 180px); display: none;">
+      <div class="windowheader" id="musicheader">
+        <div class="closebutton" id="musicclose"></div>
+        <p class="headertext">Music</p>
+        <div class="header-spacer"></div>
+      </div>
+      <div class="window-body music-body">
+        <div class="music-now-playing">
+          <div class="music-disc" id="musicDisc">&#127926;</div>
+          <div class="music-info">
+            <p class="music-title" id="musicTitle">No track selected</p>
+            <p class="music-artist" id="musicArtist">&nbsp;</p>
+          </div>
+        </div>
+        <div class="music-controls">
+          <button class="music-btn" id="prevBtn">&#9198;</button>
+          <button class="music-btn music-play" id="playBtn">&#9654;</button>
+          <button class="music-btn" id="nextBtn">&#9197;</button>
+        </div>
+        <div class="music-playlist" id="musicPlaylist"></div>
+      </div>
+    </div>
+
+    <div class="window" id="about" style="top: calc(50% - 160px); left: calc(50% - 190px); display: none;">
+      <div class="windowheader" id="aboutheader">
+        <div class="closebutton" id="aboutclose"></div>
+        <p class="headertext">About</p>
+        <div class="header-spacer"></div>
+      </div>
+      <div class="window-body about-body">
+        <div class="about-card">
+          <div class="about-avatar">DJ</div>
+          <h2>DJ</h2>
+          <p class="about-role">Developer & Poet</p>
+        </div>
+        <div class="about-details">
+          <div class="about-item">
+            <span class="about-label">Interests</span>
+            <span class="about-value">Code, Poetry, Music</span>
+          </div>
+          <div class="about-item">
+            <span class="about-label">OS</span>
+            <span class="about-value">DJsOS v1.0.0</span>
+          </div>
+          <div class="about-item">
+            <span class="about-label">Uptime</span>
+            <span class="about-value" id="uptimeDisplay">0s</span>
+          </div>
+          <div class="about-item">
+            <span class="about-label">GitHub</span>
+            <a href="https://github.com/Jeivish" target="_blank" class="about-link">Jeivish</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
