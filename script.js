@@ -52,12 +52,50 @@ var notes = [
 ];
 
 var playlist = [
-  { title: "Late Night Coding", artist: "Lo-Fi Beats", duration: "3:42" },
-  { title: "Digital Dreams", artist: "Synthwave", duration: "4:18" },
-  { title: "Quiet Hours", artist: "Ambient", duration: "5:01" },
-  { title: "Neon Rain", artist: "Chillhop", duration: "3:55" },
-  { title: "Binary Sunset", artist: "Electronic", duration: "4:33" }
+  { title: "Late Night Coding", artist: "Lo-Fi Beats", duration: "3:42", freq: 220, type: "sine" },
+  { title: "Digital Dreams", artist: "Synthwave", duration: "4:18", freq: 330, type: "sawtooth" },
+  { title: "Quiet Hours", artist: "Ambient", duration: "5:01", freq: 174, type: "sine" },
+  { title: "Neon Rain", artist: "Chillhop", duration: "3:55", freq: 261, type: "triangle" },
+  { title: "Binary Sunset", artist: "Electronic", duration: "4:33", freq: 392, type: "square" }
 ];
+
+var audioCtx = null;
+var oscillator = null;
+var gainNode = null;
+
+function startAudio(track) {
+  stopAudio();
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  oscillator = audioCtx.createOscillator();
+  gainNode = audioCtx.createGain();
+
+  oscillator.type = track.type;
+  oscillator.frequency.setValueAtTime(track.freq, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+
+  var lfo = audioCtx.createOscillator();
+  var lfoGain = audioCtx.createGain();
+  lfo.frequency.setValueAtTime(0.5, audioCtx.currentTime);
+  lfoGain.gain.setValueAtTime(track.freq * 0.02, audioCtx.currentTime);
+  lfo.connect(lfoGain);
+  lfoGain.connect(oscillator.frequency);
+  lfo.start();
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  oscillator.start();
+}
+
+function stopAudio() {
+  if (oscillator) {
+    oscillator.stop();
+    oscillator = null;
+  }
+  if (audioCtx) {
+    audioCtx.close();
+    audioCtx = null;
+  }
+}
 
 var terminalCommands = {
   help: function() {
@@ -195,6 +233,12 @@ function openWindow(element) {
 
 function closeWindow(element) {
   element.style.display = "none";
+  if (element.id === "music" && isPlaying) {
+    stopAudio();
+    isPlaying = false;
+    document.getElementById("playBtn").textContent = "▶";
+    document.getElementById("musicDisc").classList.remove("spinning");
+  }
 }
 
 function handleWindowTap(element) {
@@ -377,6 +421,7 @@ function selectTrack(index) {
   isPlaying = true;
   document.getElementById("playBtn").textContent = "⏸";
   document.getElementById("musicDisc").classList.add("spinning");
+  startAudio(playlist[index]);
   populatePlaylist();
 }
 
@@ -390,8 +435,10 @@ document.getElementById("playBtn").addEventListener("click", function() {
   var disc = document.getElementById("musicDisc");
   if (isPlaying) {
     disc.classList.add("spinning");
+    startAudio(playlist[currentTrack]);
   } else {
     disc.classList.remove("spinning");
+    stopAudio();
   }
 });
 
